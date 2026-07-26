@@ -1,30 +1,120 @@
-# Simple Notes App
-This is a simple notes app built with React and Django.
+# Django Notes App on Kubernetes
 
-## Requirements
-1. Python 3.9
-2. Node.js
-3. React
+A simple Kubernetes deployment of a Django Notes application.
 
-## Installation
-1. Clone the repository
+This project demonstrates the fundamentals of deploying a containerized application on Kubernetes using core Kubernetes resources.
+
+## Technologies Used
+
+* Kubernetes
+* Docker
+* Django
+* YAML
+
+## Kubernetes Resources
+
+* **Namespace** – Isolates the application within the cluster.
+* **Deployment** – Manages the application Pods and ensures the desired number of replicas are running.
+* **Service** – Exposes the application using a Kubernetes Service.
+
+## Project Structure
+
+```text
+.
+├── deployment.yaml
+├── service.yaml
+├── namespace.yaml
+└── README.md
 ```
-git clone https://github.com/LondheShubham153/django-notes-app.git
+
+## Prerequisites
+
+* Kubernetes cluster (Kind, Minikube, kubeadm, or any Kubernetes environment)
+* kubectl
+
+## Deployment
+
+Create the namespace:
+
+```bash
+kubectl apply -f namespace.yaml
 ```
 
-2. Build the app
-```
-docker build -t notes-app .
-```
+Deploy the application:
 
-3. Run the app
-```
-docker run -d -p 8000:8000 notes-app:latest
+```bash
+kubectl apply -f deployment.yaml
 ```
 
-## Nginx
+Create the Service:
 
-Install Nginx reverse proxy to make this application available
+```bash
+kubectl apply -f service.yaml
+```
 
-`sudo apt-get update`
-`sudo apt install nginx`
+## Verify the Deployment
+
+Check the namespace:
+
+```bash
+kubectl get ns
+```
+
+Check the Pods:
+
+```bash
+kubectl get pods -n notes-app
+```
+
+Check the Deployment:
+
+```bash
+kubectl get deployments -n notes-app
+```
+
+Check the Service:
+
+```bash
+kubectl get svc -n notes-app
+```
+
+## Accessing the Application
+
+### Using ClusterIP
+
+```bash
+kubectl port-forward -n notes-app svc/notes-app-service 8000:8000
+```
+
+Then open:
+
+```
+http://localhost:8000
+```
+
+### Using NodePort
+
+If the Service type is changed to `NodePort`, access the application using:
+
+```
+http://<NODE-IP>:<NODE-PORT>
+```
+
+For example:
+
+```
+http://<NODE-IP>:30080
+```
+
+## Features Demonstrated
+
+* Kubernetes Namespace
+* Kubernetes Deployment
+* Kubernetes Service
+* Pod Management
+* Label Selectors
+* Container Port Configuration
+
+## Learning Outcome
+
+This project demonstrates how Kubernetes Deployments, Services, and Namespaces work together to deploy and expose a containerized Django application.
